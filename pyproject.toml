@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "FastAPIwebsite"
+version = "0.1.0"
+description = "Проект по подбору жилья"
+authors = ["Sergey <darkus007@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = {extras = ["all"], version = "^0.101.1"}
+sqlalchemy = "^2.0.19"
+alembic = "^1.11.2"
+asyncpg = "^0.28.0"
+pydantic-settings = "^2.0.3"
+psycopg2-binary = "^2.9.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
