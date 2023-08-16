@@ -7,7 +7,12 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.database import Base
 
 
-class Project(Base):
+class ModelToDictMixin:
+    def to_dict(self):
+        return {field.name: getattr(self, field.name) for field in self.__table__.c}
+
+
+class Project(Base, ModelToDictMixin):
     __tablename__ = "project"
 
     project_id: Mapped[int] = mapped_column(primary_key=True)
@@ -25,7 +30,7 @@ class Project(Base):
     flat: Mapped[list["Flat"]] = relationship(back_populates="project")
 
 
-class Flat(Base):
+class Flat(Base, ModelToDictMixin):
     __tablename__ = "flat"
 
     flat_id: Mapped[int] = mapped_column(primary_key=True)
@@ -45,7 +50,7 @@ class Flat(Base):
     prices: Mapped[list["Price"]] = relationship(back_populates="flat")
 
 
-class Price(Base):
+class Price(Base, ModelToDictMixin):
     __tablename__ = "price"
 
     price_id: Mapped[int] = mapped_column(primary_key=True)

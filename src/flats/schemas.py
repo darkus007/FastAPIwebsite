@@ -4,7 +4,7 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 
 
-class Project(BaseModel):
+class ProjectSchema(BaseModel):
     project_id: int
     city: str = Field(max_length=127)
     name: str = Field(max_length=127)
@@ -18,7 +18,7 @@ class Project(BaseModel):
     data_closed: Optional[datetime]
 
 
-class Flat(BaseModel):
+class FlatSchema(BaseModel):
     flat_id: int
     project_id: int
     address: Optional[str] = Field(max_length=255)
@@ -33,7 +33,7 @@ class Flat(BaseModel):
     data_closed: Optional[datetime]
 
 
-class Price(BaseModel):
+class PriceSchema(BaseModel):
     price_id: int
     flat_id: int
     benefit_name: Optional[str] = Field(max_length=127)
