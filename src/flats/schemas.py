@@ -14,8 +14,8 @@ class ProjectSchema(BaseModel):
     latitude: Optional[float]
     longitude: Optional[float]
     address: Optional[str] = Field(max_length=255)
-    data_created: datetime
-    data_closed: Optional[datetime]
+    data_created: datetime = Field(default_factory=datetime.now)
+    data_closed: Optional[datetime] = None
 
 
 class FlatSchema(BaseModel):
@@ -29,7 +29,7 @@ class FlatSchema(BaseModel):
     bulk: Optional[str] = Field(max_length=127)
     settlement_date: Optional[datetime]
     url_suffix: Optional[str] = Field(max_length=127)
-    data_created: datetime
+    data_created: datetime = Field(default_factory=datetime.now)
     data_closed: Optional[datetime]
 
 
@@ -41,4 +41,4 @@ class PriceSchema(BaseModel):
     price: int
     meter_price: Optional[int]
     booking_status: Optional[str] = Field(max_length=15)
-    data_created: datetime
+    data_created: datetime = Field(default_factory=datetime.now)
