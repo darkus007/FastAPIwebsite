@@ -32,8 +32,8 @@ class AbstractRepository(ABC):
 class SQLAlchemyRepository(AbstractRepository):
     model = None
 
-    def __init__(self, session):      # AsyncSession = async_session()):
-        self.session = session()
+    def __init__(self, session=None):
+        self.session = session
 
     async def add_one(self, data: dict) -> dict:
         """
@@ -64,10 +64,10 @@ class SQLAlchemyRepository(AbstractRepository):
         """
         Возвращает список объектов по заданным фильтрам.
 
-        :param filters: фильтры в формате dict[поле модели: значение]
-        :param limit: максимальное количество
-        :param offset: смещение от начала
-        :return: список словарей list[dict]
+        :param filters: фильтры в формате dict[поле модели: значение];
+        :param limit: максимальное количество;
+        :param offset: смещение от начала;
+        :return: список словарей list[dict].
         """
         stmt = select(self.model).limit(limit).offset(offset=offset)
         if filters:

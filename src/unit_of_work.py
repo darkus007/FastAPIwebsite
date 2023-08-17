@@ -40,11 +40,13 @@ class AbstractUnitOfWork(ABC):
 
 
 class UnitOfWork(AbstractUnitOfWork):
-    def __init__(self):
+    def __init__(self, repository: AbstractRepository):
         self.session_factory = async_session
+        self.objects = repository
 
     async def __aenter__(self):
         self.session = self.session_factory()
+        self.objects.session = self.session
 
     async def __aexit__(self, *args):
         await self.rollback()
@@ -60,18 +62,12 @@ class UnitOfWork(AbstractUnitOfWork):
 class UnitOfWorkFactory:
     @staticmethod
     def projects():
-        uow_projects = UnitOfWork()
-        uow_projects.objects = ProjectRepository(session=uow_projects.session_factory)
-        return uow_projects
+        return UnitOfWork(ProjectRepository())
 
     @staticmethod
     def flats():
-        uow_flats = UnitOfWork()
-        uow_flats.objects = FlatRepository(session=uow_flats.session_factory)
-        return uow_flats
+        return UnitOfWork(FlatRepository())
 
     @staticmethod
     def prices():
-        uow_prices = UnitOfWork()
-        uow_prices.objects = PriceRepository(session=uow_prices.session_factory)
-        return uow_prices
+        return UnitOfWork(PriceRepository())
