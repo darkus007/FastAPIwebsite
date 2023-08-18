@@ -21,7 +21,11 @@ class AbstractRepository(ABC):
         ...
 
     @abstractmethod
-    async def patch_one(self, id: int, data: dict):
+    async def patch_one(self, id: dict, data: dict):
+        ...
+
+    @abstractmethod
+    async def delete_one(self, id: dict):
         ...
 
     @abstractmethod
@@ -40,25 +44,38 @@ class SQLAlchemyRepository(AbstractRepository):
         Добавляет запись в БД.
 
         :param data: данные для записи в формате dict;
-        :return: созданная запись в формате dict
+        :return: созданная запись в формате dict.
         """
         stmt = insert(self.model).values(**data).returning(self.model)
         res = await self.session.execute(stmt)
         # await self.session.commit()   # перенесено в Unit of Work
         return res.scalar_one()
 
-    async def patch_one(self, id: int, data: dict) -> dict:
+    async def patch_one(self, filter: dict, data: dict) -> dict:
         """
-        Находит запись по id и обновляет ее.
+        Находит запись в БД по фильтру (id) и обновляет ее.
 
-        :param id: объекта, который меняем;
+        :param filter: id записи, которую меняем;
         :param data: новые данные;
         :return: обновленная запись.
         """
-        stmt = update(self.model).values(**data).filter_by(id=id).returning(self.model)
+        stmt = update(self.model).values(**data).filter_by(**filter).returning(self.model)
         res = await self.session.execute(stmt)
         # await self.session.commit()   # перенесено в Unit of Work
         return res.scalar_one()
+
+    async def delete_one(self, filter: dict) -> dict:
+        """
+        Находит запись в БД по фильтру (id) и удаляет ее.
+
+        :param filter: id записи, которую меняем;
+        :return: id удаленной записи.
+        """
+        stmt = select(self.model).filter_by(**filter)
+        res = await self.session.execute(stmt)
+        obj = res.scalar_one()
+        await self.session.delete(obj)
+        return {}
 
     async def find_all(self, filters: dict | None = None, limit: int = 50, offset: int = 0) -> list[dict]:
         """
