@@ -4,6 +4,7 @@ from src.flats.schemas import ProjectSchema, FlatSchema, PriceSchema
 from src.flats.schemas import ProjectPatchSchema, FlatPatchSchema, PricePatchSchema
 from src.flats.search_filters import project_filters, flat_filters, price_filters
 from src.flats.services import ServiceFactory
+from src.auth.services import current_superuser
 
 router = APIRouter(
     prefix="/housing",
@@ -23,17 +24,17 @@ async def get_projects(
     return await ServiceFactory().project_service().get_all(project_filters, pagination)
 
 
-@router.post("/projects", response_model=ProjectSchema)
+@router.post("/projects", response_model=ProjectSchema, dependencies=[Depends(current_superuser)])
 async def add_project(project: ProjectSchema):
     return await ServiceFactory().project_service().add(project)
 
 
-@router.patch("/projects", response_model=ProjectSchema)
+@router.patch("/projects", response_model=ProjectSchema, dependencies=[Depends(current_superuser)])
 async def patch_project(project_id: int, project: ProjectPatchSchema):
     return await ServiceFactory().project_service().patch({"project_id": project_id}, project)
 
 
-@router.delete("/projects")
+@router.delete("/projects", dependencies=[Depends(current_superuser)])
 async def delete_project(project_id: int):
     return await ServiceFactory().project_service().delete({"project_id": project_id})
 
@@ -46,17 +47,17 @@ async def get_flats(
     return await ServiceFactory().flat_service().get_all(flat_filters, pagination)
 
 
-@router.post("/flats", response_model=FlatSchema)
+@router.post("/flats", response_model=FlatSchema, dependencies=[Depends(current_superuser)])
 async def add_flat(flat: FlatSchema):
     return await ServiceFactory().flat_service().add(flat)
 
 
-@router.patch("/flats", response_model=FlatSchema)
+@router.patch("/flats", response_model=FlatSchema, dependencies=[Depends(current_superuser)])
 async def patch_flat(flat_id: int, flat: FlatPatchSchema):
     return await ServiceFactory().flat_service().patch({"flat_id": flat_id}, flat)
 
 
-@router.delete("/flats")
+@router.delete("/flats", dependencies=[Depends(current_superuser)])
 async def delete_flat(flat_id: int):
     return await ServiceFactory().flat_service().delete({"flat_id": flat_id})
 
@@ -69,16 +70,16 @@ async def get_prices(
     return await ServiceFactory().price_service().get_all(price_filters, pagination)
 
 
-@router.post("/prices", response_model=PriceSchema)
+@router.post("/prices", response_model=PriceSchema, dependencies=[Depends(current_superuser)])
 async def add_price(price: PriceSchema):
     return await ServiceFactory().price_service().add(price)
 
 
-@router.patch("/prices", response_model=PriceSchema)
+@router.patch("/prices", response_model=PriceSchema, dependencies=[Depends(current_superuser)])
 async def patch_price(price_id: int, price: PricePatchSchema):
     return await ServiceFactory().price_service().patch({"price_id": price_id}, price)
 
 
-@router.delete("/prices")
+@router.delete("/prices", dependencies=[Depends(current_superuser)])
 async def delete_price(price_id: int):
     return await ServiceFactory().price_service().delete({"price_id": price_id})
