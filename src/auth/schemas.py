@@ -4,17 +4,24 @@
 """
 
 import uuid
+from typing import Optional
 
 from fastapi_users import schemas
+from pydantic import BaseModel, Field
 
 
-class UserRead(schemas.BaseUser[uuid.UUID]):
+class ExtraUserFields(BaseModel):
+    first_name: Optional[str] = Field(max_length=255, default=None)
+    last_name: Optional[str] = Field(max_length=255, default=None)
+
+
+class UserRead(ExtraUserFields, schemas.BaseUser[uuid.UUID]):
     pass
 
 
-class UserCreate(schemas.BaseUserCreate):
+class UserCreate(ExtraUserFields, schemas.BaseUserCreate):
     pass
 
 
-class UserUpdate(schemas.BaseUserUpdate):
+class UserUpdate(ExtraUserFields, schemas.BaseUserUpdate):
     pass

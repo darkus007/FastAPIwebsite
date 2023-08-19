@@ -4,6 +4,8 @@
 """
 
 from fastapi import Depends
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from fastapi_users.db import SQLAlchemyBaseUserTableUUID
@@ -16,7 +18,8 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
     Модель пользователя, которую предоставляет библиотека fastapi-users.
     При необходимости расширения, добавляет новые свойства тут.
     """
-    pass
+    first_name: Mapped[str | None] = mapped_column(String(255))
+    last_name: Mapped[str | None] = mapped_column(String(255))
 
 
 async def get_user_db(session: AsyncSession = Depends(get_async_session)):
