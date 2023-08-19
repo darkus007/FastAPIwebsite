@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
+    AUTH_SECRET: str
 
     @property
     def database_url(self):
